@@ -7,17 +7,17 @@ import ExportView from './views/ExportView';
 export default function App() {
     const [activeStep, setActiveStep] = useState('generate');
 
-    // Brand tokens — Swiss defaults
+    // Dark Obsidian + Acid Green Tokens
     const [tokens, setTokens] = useState({
-        primary: '#0052CC',
-        secondary: '#1A1A1A',
-        accent: '#0052CC',
-        bg: '#F5F5F0',
+        primary: '#CCFF00',
+        secondary: '#1A1A1E',
+        accent: '#CCFF00',
+        bg: '#09090B',
     });
 
     const [headline, setHeadline] = useState('BRANDFORGE');
     const [subhead, setSubhead] = useState('Generate brand-compliant assets across every format.');
-    const [prompt, setPrompt] = useState('Clean corporate identity system with geometric accents');
+    const [prompt, setPrompt] = useState('Obsidian dark architectural layout with vivid vector lines');
 
     const [aspectRatio, setAspectRatio] = useState('1:1');
     const [showGrid, setShowGrid] = useState(false);
@@ -33,7 +33,7 @@ export default function App() {
     const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 2500); };
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-ground text-ink font-body">
+        <div className="flex h-screen w-screen overflow-hidden bg-ground text-ink font-body selection:bg-acid selection:text-black">
             <ExportSidebar activeStep={activeStep} onSelectStep={setActiveStep} />
 
             <div className="flex-1 flex h-full overflow-hidden">
@@ -48,14 +48,14 @@ export default function App() {
                         complexity={complexity} setComplexity={setComplexity}
                         glow={glow} setGlow={setGlow}
                         geometric={geometric} setGeometric={setGeometric}
-                        onForgeVisual={() => showToast('Asset generated')}
+                        onForgeVisual={() => showToast('Asset generated in Acid Obsidian')}
                     />
                 )}
 
                 {activeStep === 'brand' && (
                     <BrandView
                         tokens={tokens} setTokens={setTokens}
-                        onSaveTokens={() => showToast('Tokens locked')}
+                        onSaveTokens={() => showToast('Tokens locked in system')}
                     />
                 )}
 
@@ -72,10 +72,11 @@ export default function App() {
                 )}
             </div>
 
-            {/* Toast — simple, no bounce */}
+            {/* Toast Notification */}
             {toast && (
-                <div className="fixed bottom-5 left-1/2 -translate-x-1/2 px-4 py-2.5 bg-ink text-white text-xs font-body border border-ink z-50">
-                    {toast}
+                <div className="fixed bottom-5 left-1/2 -translate-x-1/2 px-4 py-2.5 bg-surface text-acid font-mono text-xs border border-acid shadow-2xl z-50 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-acid animate-ping" />
+                    <span>{toast}</span>
                 </div>
             )}
         </div>

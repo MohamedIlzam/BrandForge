@@ -4,15 +4,18 @@ export default {
     theme: {
         extend: {
             colors: {
-                // Swiss palette — warm off-white ground, single cobalt accent
-                ground: '#F5F5F0',
-                surface: '#FFFFFF',
-                ink: '#1A1A1A',
-                muted: '#6B6B6B',
-                rule: '#D4D4D0',
-                hover: '#EBEBEA',
-                cobalt: '#0052CC',
-                'cobalt-light': '#E8F0FE',
+                // Dark Obsidian + Electric Acid Green Palette
+                ground: '#09090B',
+                surface: '#121215',
+                'surface-elevated': '#1A1A1E',
+                ink: '#F4F4F5',
+                muted: '#A1A1AA',
+                rule: '#27272A',
+                hover: '#18181B',
+                acid: '#CCFF00',
+                'acid-hover': '#B8E600',
+                'acid-tint': 'rgba(204, 255, 0, 0.08)',
+                'acid-border': 'rgba(204, 255, 0, 0.3)',
             },
             fontFamily: {
                 display: ['"Space Grotesk"', 'sans-serif'],

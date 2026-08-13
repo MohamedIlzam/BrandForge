@@ -6,11 +6,12 @@
     html {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        color-scheme: dark;
     }
 
     body {
-        background-color: #F5F5F0;
-        color: #1A1A1A;
+        background-color: #09090B;
+        color: #F4F4F5;
         font-family: 'Inter', sans-serif;
         font-size: 14px;
         line-height: 1.6;
@@ -26,26 +27,26 @@
     }
 }
 
-/* Scrollbar — minimal, structural */
+/* Dark Minimalist Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #09090B;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #D4D4D0;
+    background: #27272A;
     border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #0052CC;
+    background: #CCFF00;
 }
 
-/* Subtle grain texture on large surfaces */
+/* Subtle dark noise grain texture */
 .grain {
     position: relative;
 }
@@ -54,7 +55,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    opacity: 0.03;
+    opacity: 0.04;
     pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }

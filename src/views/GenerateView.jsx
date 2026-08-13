@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CanvasRenderer from '../components/CanvasRenderer';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Zap } from 'lucide-react';
 
 export default function GenerateView({
     headline, setHeadline,
@@ -17,10 +17,10 @@ export default function GenerateView({
     const [isForging, setIsForging] = useState(false);
 
     const presets = [
-        { title: 'Corporate Identity', desc: 'Structured brand system launch', prompt: 'Clean corporate identity system with geometric accents', ratio: '16:9', mode: 'grid' },
-        { title: 'Product Card', desc: 'Square product feature asset', prompt: 'Minimal product showcase with off-center composition', ratio: '1:1', mode: 'circle' },
-        { title: 'Vertical Story', desc: 'Social story / reel format', prompt: 'Bold vertical story layout with typographic hierarchy', ratio: '9:16', mode: 'diagonal' },
-        { title: 'Header Banner', desc: 'Wide navigation banner', prompt: 'Professional wide-format header with brand elements', ratio: '4:1', mode: 'blocks' },
+        { title: 'Cyber Architecture', desc: 'Vector matrix brand identity', prompt: 'Obsidian dark architectural layout with vivid vector lines', ratio: '16:9', mode: 'grid' },
+        { title: 'Monolith Showcase', desc: 'Square product asset', prompt: 'Minimalist dark product showcase with high-contrast focal circle', ratio: '1:1', mode: 'circle' },
+        { title: 'Kinetic Story', desc: 'Vertical social format', prompt: 'Dynamic diagonal strip layout with bold typography', ratio: '9:16', mode: 'diagonal' },
+        { title: 'Header Grid', desc: 'Wide website navigation banner', prompt: 'Modular dark header banner with grid block hierarchy', ratio: '4:1', mode: 'blocks' },
     ];
 
     const modes = [
@@ -45,38 +45,39 @@ export default function GenerateView({
 
     return (
         <div className="flex flex-1 h-full overflow-hidden">
-            {/* Left — Presets */}
-            <div className="w-64 bg-white border-r border-rule flex flex-col h-full shrink-0 overflow-y-auto">
-                <div className="px-4 py-4 border-b border-rule">
-                    <h2 className="font-display font-700 text-sm text-ink">Presets</h2>
+            {/* Left — Presets Drawer */}
+            <div className="w-64 bg-surface border-r border-rule flex flex-col h-full shrink-0 overflow-y-auto">
+                <div className="px-4 py-4 border-b border-rule flex items-center justify-between">
+                    <h2 className="font-display font-bold text-sm text-ink tracking-wide uppercase">Presets</h2>
+                    <span className="font-mono text-[10px] text-muted">04 READY</span>
                 </div>
-                <div className="p-4 space-y-1">
+                <div className="p-3 space-y-1">
                     {presets.map((p, i) => (
                         <button
                             key={i}
                             onClick={() => { setPrompt(p.prompt); setAspectRatio(p.ratio); setVisualMode(p.mode); }}
-                            className="w-full text-left px-3 py-2.5 border-l-2 border-transparent hover:border-cobalt hover:bg-cobalt-light transition-colors duration-150"
+                            className="w-full text-left px-3 py-3 border-l-2 border-transparent hover:border-acid hover:bg-surface-elevated transition-all duration-150 group"
                         >
-                            <span className="font-display font-600 text-xs text-ink block">{p.title}</span>
+                            <span className="font-display font-semibold text-xs text-ink group-hover:text-acid block">{p.title}</span>
                             <span className="text-muted text-[11px] leading-tight block mt-0.5">{p.desc}</span>
                         </button>
                     ))}
                 </div>
             </div>
 
-            {/* Center — Canvas stage */}
+            {/* Center — Canvas Stage */}
             <div className="flex-1 flex flex-col h-full overflow-hidden bg-ground grain">
-                {/* Toolbar */}
-                <div className="h-12 border-b border-rule px-5 flex items-center justify-between bg-white">
+                {/* Stage Toolbar */}
+                <div className="h-12 border-b border-rule px-5 flex items-center justify-between bg-surface">
                     <div className="flex items-center gap-4">
-                        <span className="text-xs text-muted">Composition</span>
+                        <span className="text-xs text-muted uppercase font-mono tracking-wider">Composition</span>
                         <div className="flex items-center gap-1">
                             {modes.map(m => (
                                 <button
                                     key={m.id}
                                     onClick={() => setVisualMode(m.id)}
-                                    className={`px-2.5 py-1 text-xs font-display font-500 transition-colors duration-150 ${visualMode === m.id
-                                            ? 'bg-cobalt text-white'
+                                    className={`px-3 py-1 text-xs font-display font-semibold transition-all duration-150 ${visualMode === m.id
+                                            ? 'bg-acid text-black font-bold'
                                             : 'text-muted hover:text-ink hover:bg-hover'
                                         }`}
                                 >
@@ -87,14 +88,14 @@ export default function GenerateView({
 
                         <div className="w-px h-5 bg-rule" />
 
-                        <span className="text-xs text-muted">Ratio</span>
+                        <span className="text-xs text-muted uppercase font-mono tracking-wider">Aspect</span>
                         <div className="flex items-center gap-1">
                             {['1:1', '16:9', '9:16', '4:1'].map(r => (
                                 <button
                                     key={r}
                                     onClick={() => setAspectRatio(r)}
-                                    className={`px-2 py-1 font-mono text-xs transition-colors duration-150 ${aspectRatio === r
-                                            ? 'bg-ink text-white'
+                                    className={`px-2.5 py-1 font-mono text-xs transition-all duration-150 ${aspectRatio === r
+                                            ? 'bg-ink text-black font-bold'
                                             : 'text-muted hover:text-ink hover:bg-hover'
                                         }`}
                                 >
@@ -110,16 +111,16 @@ export default function GenerateView({
                             setHeadline('BRANDFORGE'); setSubhead('Asset Studio');
                             setVisualMode('grid');
                         }}
-                        className="p-1.5 text-muted hover:text-ink transition-colors"
-                        title="Reset"
+                        className="p-1.5 text-muted hover:text-acid transition-colors"
+                        title="Reset Parameters"
                     >
-                        <RotateCcw className="w-4 h-4" strokeWidth={1.5} />
+                        <RotateCcw className="w-4 h-4" strokeWidth={1.75} />
                     </button>
                 </div>
 
-                {/* Canvas */}
+                {/* Canvas Display */}
                 <div className="flex-1 flex items-center justify-center p-8 overflow-auto relative">
-                    <div className="bg-white p-1 border border-rule">
+                    <div className="bg-surface p-1 border border-rule shadow-2xl">
                         <CanvasRenderer
                             width={d.w}
                             height={d.h}
@@ -131,41 +132,44 @@ export default function GenerateView({
                     </div>
 
                     {isForging && (
-                        <div className="absolute inset-0 bg-ground/90 flex items-center justify-center">
-                            <p className="font-display font-600 text-sm text-ink">Generating…</p>
+                        <div className="absolute inset-0 bg-ground/90 backdrop-blur-sm flex items-center justify-center">
+                            <div className="flex items-center gap-3 px-5 py-3 border border-acid bg-surface text-acid font-display font-bold text-sm tracking-wider">
+                                <Zap className="w-4 h-4 animate-spin" />
+                                SYNTHESIZING VECTOR ART...
+                            </div>
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* Right — Inspector */}
-            <div className="w-72 bg-white border-l border-rule flex flex-col h-full shrink-0">
+            {/* Right — Parameter Inspector */}
+            <div className="w-72 bg-surface border-l border-rule flex flex-col h-full shrink-0">
                 <div className="px-4 py-4 border-b border-rule">
-                    <h2 className="font-display font-700 text-sm text-ink">Inspector</h2>
+                    <h2 className="font-display font-bold text-sm text-ink uppercase tracking-wide">Inspector</h2>
                 </div>
 
                 <div className="p-4 flex-1 space-y-5 overflow-y-auto">
                     {/* Prompt */}
                     <div>
-                        <label className="text-xs text-muted block mb-1.5">Prompt</label>
+                        <label className="text-xs text-muted block mb-1.5 uppercase font-mono tracking-wider">Directive Prompt</label>
                         <textarea
                             rows={3}
                             value={prompt}
                             onChange={e => setPrompt(e.target.value)}
-                            className="w-full border border-rule px-2.5 py-2 text-xs font-body text-ink focus:outline-none focus:border-cobalt resize-none bg-ground"
+                            className="w-full border border-rule px-3 py-2 text-xs font-body text-ink focus:outline-none focus:border-acid resize-none bg-ground"
                         />
                     </div>
 
                     {/* Typography */}
                     <div className="pt-3 border-t border-rule space-y-3">
-                        <label className="text-xs text-muted block">Typography overlays</label>
+                        <label className="text-xs text-muted block uppercase font-mono tracking-wider">Typography Directives</label>
                         <div>
                             <span className="text-[11px] text-muted block mb-1">Headline</span>
                             <input
                                 type="text"
                                 value={headline}
                                 onChange={e => setHeadline(e.target.value)}
-                                className="w-full border border-rule px-2.5 py-1.5 text-xs font-display text-ink focus:outline-none focus:border-cobalt bg-ground"
+                                className="w-full border border-rule px-3 py-1.5 text-xs font-display font-bold text-ink focus:outline-none focus:border-acid bg-ground"
                             />
                         </div>
                         <div>
@@ -174,14 +178,14 @@ export default function GenerateView({
                                 type="text"
                                 value={subhead}
                                 onChange={e => setSubhead(e.target.value)}
-                                className="w-full border border-rule px-2.5 py-1.5 text-xs font-body text-ink focus:outline-none focus:border-cobalt bg-ground"
+                                className="w-full border border-rule px-3 py-1.5 text-xs font-body text-ink focus:outline-none focus:border-acid bg-ground"
                             />
                         </div>
                     </div>
 
                     {/* Parameters */}
                     <div className="pt-3 border-t border-rule space-y-3">
-                        <label className="text-xs text-muted block">Parameters</label>
+                        <label className="text-xs text-muted block uppercase font-mono tracking-wider">Vector Controls</label>
                         {[
                             { label: 'Density', value: complexity, set: setComplexity },
                             { label: 'Weight', value: glow, set: setGlow },
@@ -190,26 +194,26 @@ export default function GenerateView({
                             <div key={s.label}>
                                 <div className="flex justify-between text-xs mb-1">
                                     <span className="text-ink">{s.label}</span>
-                                    <span className="font-mono text-muted">{s.value}</span>
+                                    <span className="font-mono text-acid">{s.value}%</span>
                                 </div>
                                 <input
                                     type="range" min="10" max="100" value={s.value}
                                     onChange={e => s.set(parseInt(e.target.value))}
-                                    className="w-full accent-cobalt"
+                                    className="w-full accent-acid"
                                 />
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Generate CTA */}
-                <div className="p-4 border-t border-rule">
+                {/* Solid Acid Green CTA */}
+                <div className="p-4 border-t border-rule bg-surface">
                     <button
                         onClick={handleForge}
                         disabled={isForging}
-                        className="w-full py-2.5 bg-cobalt text-white font-display font-600 text-xs tracking-wide hover:bg-blue-700 transition-colors duration-150 disabled:opacity-40"
+                        className="w-full py-3 bg-acid text-black font-display font-bold text-xs tracking-wider uppercase hover:bg-acid-hover transition-colors duration-150 disabled:opacity-40"
                     >
-                        Generate
+                        Generate Asset
                     </button>
                 </div>
             </div>

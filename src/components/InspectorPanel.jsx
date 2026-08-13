@@ -9,15 +9,15 @@ export default function InspectorPanel({
     onBatchExport,
 }) {
     return (
-        <div className="w-72 bg-white border-l border-rule flex flex-col h-full shrink-0">
+        <div className="w-72 bg-surface border-l border-rule flex flex-col h-full shrink-0">
             <div className="px-4 py-4 border-b border-rule">
-                <h2 className="font-display font-700 text-sm text-ink">Export settings</h2>
+                <h2 className="font-display font-bold text-sm text-ink uppercase tracking-wide">Export Engine</h2>
             </div>
 
             <div className="p-4 flex-1 space-y-5 overflow-y-auto">
-                {/* Content directives */}
+                {/* Content Overrides */}
                 <div>
-                    <label className="text-xs text-muted block mb-1.5">Content</label>
+                    <label className="text-xs text-muted block mb-1.5 uppercase font-mono tracking-wider">Content Directives</label>
                     <div className="space-y-2">
                         <div>
                             <span className="text-[11px] text-muted block mb-1">Headline</span>
@@ -25,7 +25,7 @@ export default function InspectorPanel({
                                 type="text"
                                 value={headline}
                                 onChange={e => setHeadline(e.target.value)}
-                                className="w-full border border-rule px-2.5 py-1.5 text-xs font-display text-ink focus:outline-none focus:border-cobalt bg-ground"
+                                className="w-full border border-rule px-3 py-1.5 text-xs font-display font-bold text-ink focus:outline-none focus:border-acid bg-ground"
                             />
                         </div>
                         <div>
@@ -34,7 +34,7 @@ export default function InspectorPanel({
                                 type="text"
                                 value={subhead}
                                 onChange={e => setSubhead(e.target.value)}
-                                className="w-full border border-rule px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-cobalt bg-ground"
+                                className="w-full border border-rule px-3 py-1.5 text-xs text-ink focus:outline-none focus:border-acid bg-ground"
                             />
                         </div>
                     </div>
@@ -42,16 +42,16 @@ export default function InspectorPanel({
 
                 {/* Resolution */}
                 <div className="pt-3 border-t border-rule">
-                    <label className="text-xs text-muted block mb-1.5">Resolution (DPI)</label>
+                    <label className="text-xs text-muted block mb-1.5 uppercase font-mono tracking-wider">Resolution (DPI)</label>
                     <div className="flex gap-1">
                         {[72, 150, 300].map(d => (
                             <button
                                 key={d}
                                 onClick={() => setDpi(d)}
-                                className={`flex-1 py-1.5 text-center font-mono text-xs transition-colors duration-150 ${dpi === d ? 'bg-cobalt text-white' : 'bg-ground text-muted border border-rule hover:text-ink'
+                                className={`flex-1 py-1.5 text-center font-mono text-xs transition-all duration-150 ${dpi === d ? 'bg-acid text-black font-bold' : 'bg-ground text-muted border border-rule hover:text-ink'
                                     }`}
                             >
-                                {d}
+                                {d} DPI
                             </button>
                         ))}
                     </div>
@@ -59,11 +59,11 @@ export default function InspectorPanel({
 
                 {/* Format */}
                 <div className="pt-3 border-t border-rule">
-                    <label className="text-xs text-muted block mb-1.5">Format</label>
+                    <label className="text-xs text-muted block mb-1.5 uppercase font-mono tracking-wider">Format</label>
                     <select
                         value={format}
                         onChange={e => setFormat(e.target.value)}
-                        className="w-full border border-rule px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-cobalt bg-ground"
+                        className="w-full border border-rule px-3 py-1.5 text-xs text-ink focus:outline-none focus:border-acid bg-ground font-mono"
                     >
                         <option>PNG</option>
                         <option>SVG</option>
@@ -72,13 +72,13 @@ export default function InspectorPanel({
                     </select>
                 </div>
 
-                {/* Color profile */}
+                {/* Color Profile */}
                 <div className="pt-3 border-t border-rule">
-                    <label className="text-xs text-muted block mb-1.5">Color profile</label>
+                    <label className="text-xs text-muted block mb-1.5 uppercase font-mono tracking-wider">Color Space</label>
                     <select
                         value={colorProfile}
                         onChange={e => setColorProfile(e.target.value)}
-                        className="w-full border border-rule px-2.5 py-1.5 text-xs text-ink focus:outline-none focus:border-cobalt bg-ground"
+                        className="w-full border border-rule px-3 py-1.5 text-xs text-ink focus:outline-none focus:border-acid bg-ground font-mono"
                     >
                         <option>sRGB</option>
                         <option>CMYK</option>
@@ -86,17 +86,17 @@ export default function InspectorPanel({
                     </select>
                 </div>
 
-                {/* Compliance */}
+                {/* Compliance Checks */}
                 <div className="pt-3 border-t border-rule">
-                    <label className="text-xs text-muted block mb-2">Compliance</label>
-                    <div className="space-y-1.5">
+                    <label className="text-xs text-muted block mb-2 uppercase font-mono tracking-wider">Quality Compliance</label>
+                    <div className="space-y-2">
                         {[
-                            { label: 'Token match', ok: true },
-                            { label: 'Font embedded', ok: true },
-                            { label: 'Bleed margin', ok: dpi >= 300 },
+                            { label: 'Token Spec Match', ok: true },
+                            { label: 'Fonts Subsetted', ok: true },
+                            { label: 'Print Bleed Margin', ok: dpi >= 300 },
                         ].map((c, i) => (
-                            <div key={i} className="flex items-center gap-2 text-xs">
-                                <span className={`w-1.5 h-1.5 rounded-full ${c.ok ? 'bg-green-600' : 'bg-rule'}`} />
+                            <div key={i} className="flex items-center gap-2 text-xs font-mono">
+                                <span className={`w-2 h-2 rounded-full ${c.ok ? 'bg-acid' : 'bg-zinc-700'}`} />
                                 <span className={c.ok ? 'text-ink' : 'text-muted'}>{c.label}</span>
                             </div>
                         ))}
@@ -104,13 +104,13 @@ export default function InspectorPanel({
                 </div>
             </div>
 
-            {/* Batch export */}
-            <div className="p-4 border-t border-rule">
+            {/* Batch Export Button */}
+            <div className="p-4 border-t border-rule bg-surface">
                 <button
                     onClick={onBatchExport}
-                    className="w-full py-2.5 bg-cobalt text-white font-display font-600 text-xs hover:bg-blue-700 transition-colors duration-150"
+                    className="w-full py-3 bg-acid text-black font-display font-bold text-xs tracking-wider uppercase hover:bg-acid-hover transition-colors duration-150"
                 >
-                    Export all formats
+                    Export All Formats
                 </button>
             </div>
         </div>
