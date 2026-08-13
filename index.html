@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrandForge - Deterministic AI Brand & Visual Studio</title>
+  <meta name="description" content="BrandForge - AI-augmented brand design workstation with deterministic precision. Generate visuals, enforce brand control, and export across formats seamlessly.">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+      <div class="brand-title-group">
+        <div class="brand-logo-icon">
+          <i class="fa-solid fa-cube"></i>
+        </div>
+        <div class="brand-name">
+          BRANDFORGE <span class="brand-badge">PRO v2.4</span>
+        </div>
+      </div>
+
+      <!-- Workflow Step Switcher -->
+      <nav class="workflow-steps" id="workflowSteps">
+        <button class="step-tab active" data-tab="tab-generate">
+          <span class="step-number">01</span> GENERATE
+        </button>
+        <button class="step-tab" data-tab="tab-brand">
+          <span class="step-number">02</span> BRAND CONTROL
+        </button>
+        <button class="step-tab" data-tab="tab-export">
+          <span class="step-number">03</span> EXPORT HUB
+        </button>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions">
+        <div class="status-pill">
+          <span class="pulse-dot"></span>
+          AI FORGE ENGINE READY
+        </div>
+        <button class="btn-command btn-secondary" id="btnProposal">
+          <i class="fa-solid fa-file-code"></i> PROPOSAL & SPECS
+        </button>
+      </div>
+    </header>
+
+    <!-- App Body containing 3 Views -->
+    <main class="app-body">
+
+      <!-- VIEW 1: GENERATE (CREATIVE WORKSPACE) -->
+      <section class="view-panel active" id="tab-generate">
+        <div class="workspace-layout">
+          <!-- Left Tool Ribbon -->
+          <aside class="tool-ribbon">
+            <button class="ribbon-btn active" data-drawer="templates">
+              <i class="fa-solid fa-layer-group"></i>
+              <span>Templates</span>
+            </button>
+            <button class="ribbon-btn" data-drawer="elements">
+              <i class="fa-solid fa-shapes"></i>
+              <span>Elements</span>
+            </button>
+            <button class="ribbon-btn" data-drawer="text">
+              <i class="fa-solid fa-font"></i>
+              <span>Text</span>
+            </button>
+            <button class="ribbon-btn" data-drawer="uploads">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>Uploads</span>
+            </button>
+            <button class="ribbon-btn" data-drawer="ai-prompts">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>AI Presets</span>
+            </button>
+          </aside>
+
+          <!-- Secondary Tool Drawer Panel -->
+          <aside class="drawer-panel" id="drawerPanel">
+            <div class="drawer-header">
+              <span class="label-sm" id="drawerTitle">BRAND TEMPLATES</span>
+              <i class="fa-solid fa-sliders text-muted"></i>
+            </div>
+            <div class="preset-card-grid" id="drawerContent">
+              <!-- Content populated dynamically by JS -->
+            </div>
+          </aside>
+
+          <!-- Central Workspace Stage -->
+          <div class="stage-container">
+            <!-- Stage Toolbar -->
+            <div class="stage-toolbar">
+              <div class="toolbar-group">
+                <span class="label-xs text-muted">ASPECT RATIO:</span>
+                <button class="chip-select active" data-ratio="1:1">1:1 Square</button>
+                <button class="chip-select" data-ratio="16:9">16:9 Landscape</button>
+                <button class="chip-select" data-ratio="9:16">9:16 Story</button>
+                <button class="chip-select" data-ratio="4:1">4:1 Banner</button>
+              </div>
+              <div class="toolbar-group">
+                <button class="btn-command btn-secondary" id="btnToggleGrid">
+                  <i class="fa-solid fa-grid-2"></i> Grid Overlay
+                </button>
+                <button class="btn-command btn-secondary" id="btnResetCanvas">
+                  <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- Canvas Viewport -->
+            <div class="canvas-viewport" id="canvasViewport">
+              <div class="canvas-wrapper" id="canvasWrapper">
+                <canvas id="mainCanvas" width="800" height="800"></canvas>
+                <!-- AI Forge Progress Overlay -->
+                <div class="forge-overlay" id="forgeOverlay">
+                  <div class="forge-spinner"></div>
+                  <div class="headline-sm text-main" id="forgeStatusMsg">Forging Brand Visual...</div>
+                  <div class="label-xs text-muted">SYNTHESIZING GENERATIVE & DETERMINISTIC BRAND TOKENS</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Inspector Panel -->
+          <aside class="inspector-panel">
+            <div class="inspector-section">
+              <div class="inspector-title">
+                <span class="label-sm">AI PROMPT GENERATOR</span>
+                <i class="fa-solid fa-sparkles text-accent"></i>
+              </div>
+              <div class="form-group">
+                <label class="form-label label-xs" for="promptInput">CREATIVE DIRECTIVE</label>
+                <textarea class="form-textarea" id="promptInput" placeholder="Describe visual concept e.g., Futuristic Cyberpunk Tech Launch Banner with neon typography and geometric lattice..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label label-xs" for="presetThemeSelect">BRAND PRESET</label>
+                <select class="form-select" id="presetThemeSelect">
+                  <option value="forge">Forge Precision (Indigo & Cyan)</option>
+                  <option value="synthetic">Synthetic Vision (Electric Blue & Violet)</option>
+                  <option value="industrial">Industrial Creative (Signal Orange & Dark Slate)</option>
+                  <option value="atelier">Digital Atelier (Champagne Gold & Obsidian)</option>
+                </select>
+              </div>
+              <button class="btn-command btn-accent" id="btnForgeGenerate" style="width:100%; margin-top:8px;">
+                <i class="fa-solid fa-bolt-lightning"></i> FORGE VISUAL (CTRL + ENTER)
+              </button>
+            </div>
+
+            <div class="inspector-section">
+              <div class="inspector-title">
+                <span class="label-sm">GENERATIVE PARAMETERS</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label label-xs" for="sliderComplexity">COMPLEXITY & DENSITY (<span id="valComplexity">70</span>%)</label>
+                <input type="range" class="range-slider" id="sliderComplexity" min="10" max="100" value="70">
+              </div>
+              <div class="form-group">
+                <label class="form-label label-xs" for="sliderGlow">ELECTRIC GLOW (<span id="valGlow">85</span>%)</label>
+                <input type="range" class="range-slider" id="sliderGlow" min="0" max="100" value="85">
+              </div>
+              <div class="form-group">
+                <label class="form-label label-xs" for="sliderGeometric">GEOMETRIC PRECISION (<span id="valGeometric">90</span>%)</label>
+                <input type="range" class="range-slider" id="sliderGeometric" min="10" max="100" value="90">
+              </div>
+            </div>
+
+            <div class="inspector-section">
+              <div class="inspector-title">
+                <span class="label-sm">TYPOGRAPHY OVERLAY</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label label-xs" for="canvasHeadlineText">HEADLINE TEXT</label>
+                <input type="text" class="form-input" id="canvasHeadlineText" value="UNLEASH YOUR BRAND">
+              </div>
+              <div class="form-group">
+                <label class="form-label label-xs" for="canvasSubheadText">SUBTITLE / SLOGAN</label>
+                <input type="text" class="form-input" id="canvasSubheadText" value="Design at the speed of thought with deterministic precision.">
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- VIEW 2: BRAND CONTROL -->
+      <section class="view-panel" id="tab-brand">
+        <div class="brand-control-layout">
+          <!-- Sidebar: Token Controls -->
+          <aside class="brand-sidebar">
+            <div class="headline-sm mb-3">Brand Tokens</div>
+            <p class="body-md text-muted mb-4">Modify your brand system tokens. Changes update canvas assets & Export Hub instantly.</p>
+
+            <div class="form-group">
+              <label class="form-label label-xs">BRAND PALETTE</label>
+              <div class="color-swatch-grid">
+                <div class="color-swatch-card">
+                  <span class="label-xs text-muted">PRIMARY</span>
+                  <div class="swatch-preview" id="swatchPrimary" style="background:#5D5DFF;">
+                    <input type="color" class="swatch-picker-input" id="pickerPrimary" value="#5D5DFF">
+                  </div>
+                  <span class="label-xs" id="hexPrimary">#5D5DFF</span>
+                </div>
+
+                <div class="color-swatch-card">
+                  <span class="label-xs text-muted">SECONDARY</span>
+                  <div class="swatch-preview" id="swatchSecondary" style="background:#8B5CF6;">
+                    <input type="color" class="swatch-picker-input" id="pickerSecondary" value="#8B5CF6">
+                  </div>
+                  <span class="label-xs" id="hexSecondary">#8B5CF6</span>
+                </div>
+
+                <div class="color-swatch-card">
+                  <span class="label-xs text-muted">ACCENT</span>
+                  <div class="swatch-preview" id="swatchAccent" style="background:#0EA5E9;">
+                    <input type="color" class="swatch-picker-input" id="pickerAccent" value="#0EA5E9">
+                  </div>
+                  <span class="label-xs" id="hexAccent">#0EA5E9</span>
+                </div>
+
+                <div class="color-swatch-card">
+                  <span class="label-xs text-muted">BACKGROUND</span>
+                  <div class="swatch-preview" id="swatchBg" style="background:#111317;">
+                    <input type="color" class="swatch-picker-input" id="pickerBg" value="#111317">
+                  </div>
+                  <span class="label-xs" id="hexBg">#111317</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mt-4">
+              <label class="form-label label-xs" for="brandFontHeadline">HEADLINE FONT</label>
+              <select class="form-select" id="brandFontHeadline">
+                <option value="'Geist', sans-serif">Geist (Sharp Pro Geometric)</option>
+                <option value="'Inter', sans-serif">Inter (Clean Neutral)</option>
+                <option value="'JetBrains Mono', monospace">JetBrains Mono (Technical Spec)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label label-xs" for="brandRadius">CORNER ROUNDNESS</label>
+              <select class="form-select" id="brandRadius">
+                <option value="4px">Soft (4px - Precision Tooling)</option>
+                <option value="0px">Hard (0px - Industrial Minimalist)</option>
+                <option value="8px">Rounded (8px - Smooth SaaS)</option>
+                <option value="9999px">Full Pill (9999px - Consumer Friendly)</option>
+              </select>
+            </div>
+
+            <button class="btn-command btn-primary mt-3" id="btnSaveBrandTokens" style="width:100%;">
+              <i class="fa-solid fa-floppy-disk"></i> APPLY BRAND TOKENS
+            </button>
+          </aside>
+
+          <!-- Main Component Kit Preview -->
+          <div class="brand-main-content">
+            <div class="headline-md">Live Component System Preview</div>
+            <p class="body-md text-muted">See how your current brand design system tokens render across UI components.</p>
+
+            <div class="component-preview-grid">
+              <!-- Card 1: Buttons -->
+              <div class="preview-card">
+                <div class="label-sm preview-card-title">ACTION BUTTONS</div>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                  <button class="btn-command btn-primary">PRIMARY ACTION</button>
+                  <button class="btn-command btn-secondary">SECONDARY GHOST</button>
+                  <button class="btn-command btn-accent">AI GENERATIVE GRADIENT</button>
+                </div>
+              </div>
+
+              <!-- Card 2: Badges & Chips -->
+              <div class="preview-card">
+                <div class="label-sm preview-card-title">STATUS BADGES & CHIPS</div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                  <span class="brand-badge">FORGE ACTIVE</span>
+                  <span class="chip-select active">1:1 ASPECT</span>
+                  <span class="status-pill"><span class="pulse-dot"></span> 300 DPI READY</span>
+                </div>
+              </div>
+
+              <!-- Card 3: Inputs -->
+              <div class="preview-card">
+                <div class="label-sm preview-card-title">INPUT FIELDS</div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                  <input type="text" class="form-input" value="BrandForge Precision Input">
+                  <select class="form-select">
+                    <option>Option Selected</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Card 4: Progress Indicator -->
+              <div class="preview-card">
+                <div class="label-sm preview-card-title">THE FORGE INDICATOR</div>
+                <div style="margin-top:8px;">
+                  <div style="height:6px; background:var(--bg-lowest); border-radius:var(--radius-full); overflow:hidden; border:1px solid var(--border-subtle);">
+                    <div style="width:70%; height:100%; background:linear-gradient(90deg, var(--color-primary), var(--color-tertiary));"></div>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-top:6px;" class="label-xs text-muted">
+                    <span>FORGING BRAND LOGIC</span>
+                    <span>70%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Document Inspector -->
+          <div class="spec-doc-panel">
+            <div class="label-sm text-accent mb-3">DESIGN.MD SPECIFICATION</div>
+            <pre style="white-space: pre-wrap; font-family:var(--font-mono); color:var(--text-variant); line-height:1.6;" id="designMdText">
+---
+name: Forge Precision
+colors:
+  surface: '#111317'
+  primary: '#5D5DFF'
+  secondary: '#8B5CF6'
+  accent: '#0EA5E9'
+typography:
+  headline: Geist
+  body: Inter
+  label: JetBrains Mono
+rounded: 4px
+---
+# Brand & Style
+Authoritative, surgical, and visionary for solo founders and technical creators.
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: EXPORT HUB -->
+      <section class="view-panel" id="tab-export">
+        <div class="export-hub-layout">
+          <!-- Top Bar -->
+          <div class="export-header-bar">
+            <div>
+              <div class="headline-sm">Multi-Format Asset Packaging</div>
+              <div class="body-md text-muted">Auto-adapts your generated visual across social, marketing, and print formats.</div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <select class="form-select" id="exportQualitySelect" style="width:140px;">
+                <option value="300">300 DPI (Print)</option>
+                <option value="150">150 DPI (Screen)</option>
+                <option value="72">72 DPI (Web Fast)</option>
+              </select>
+              <button class="btn-command btn-primary" id="btnBatchExport">
+                <i class="fa-solid fa-download"></i> BATCH EXPORT ALL ASSETS
+              </button>
+            </div>
+          </div>
+
+          <!-- Multi-format Cards Grid -->
+          <div class="export-grid">
+            <!-- Format 1: Instagram Post (1:1) -->
+            <div class="export-card">
+              <div class="export-card-preview">
+                <canvas id="exportCanvas1" width="300" height="300"></canvas>
+              </div>
+              <div class="export-card-footer">
+                <div>
+                  <div class="headline-sm">Instagram Post</div>
+                  <div class="label-xs text-muted">1080 x 1080 PX (1:1)</div>
+                </div>
+                <button class="btn-command btn-secondary btn-export-single" data-canvas="exportCanvas1" data-filename="BrandForge_Instagram_1080x1080.png">
+                  <i class="fa-solid fa-download"></i> PNG
+                </button>
+              </div>
+            </div>
+
+            <!-- Format 2: LinkedIn Banner (4:1) -->
+            <div class="export-card">
+              <div class="export-card-preview">
+                <canvas id="exportCanvas2" width="360" height="90"></canvas>
+              </div>
+              <div class="export-card-footer">
+                <div>
+                  <div class="headline-sm">LinkedIn Cover</div>
+                  <div class="label-xs text-muted">1584 x 396 PX (4:1)</div>
+                </div>
+                <button class="btn-command btn-secondary btn-export-single" data-canvas="exportCanvas2" data-filename="BrandForge_LinkedIn_1584x396.png">
+                  <i class="fa-solid fa-download"></i> PNG
+                </button>
+              </div>
+            </div>
+
+            <!-- Format 3: Twitter / X Header (3:1) -->
+            <div class="export-card">
+              <div class="export-card-preview">
+                <canvas id="exportCanvas3" width="360" height="120"></canvas>
+              </div>
+              <div class="export-card-footer">
+                <div>
+                  <div class="headline-sm">Twitter Header</div>
+                  <div class="label-xs text-muted">1500 x 500 PX (3:1)</div>
+                </div>
+                <button class="btn-command btn-secondary btn-export-single" data-canvas="exportCanvas3" data-filename="BrandForge_Twitter_1500x500.png">
+                  <i class="fa-solid fa-download"></i> PNG
+                </button>
+              </div>
+            </div>
+
+            <!-- Format 4: Story / Reels (9:16) -->
+            <div class="export-card">
+              <div class="export-card-preview" style="height:240px;">
+                <canvas id="exportCanvas4" width="135" height="240"></canvas>
+              </div>
+              <div class="export-card-footer">
+                <div>
+                  <div class="headline-sm">Instagram Story</div>
+                  <div class="label-xs text-muted">1080 x 1920 PX (9:16)</div>
+                </div>
+                <button class="btn-command btn-secondary btn-export-single" data-canvas="exportCanvas4" data-filename="BrandForge_Story_1080x1920.png">
+                  <i class="fa-solid fa-download"></i> PNG
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Modal: Proposal & Specs Viewer -->
+    <div class="modal-backdrop" id="proposalModal">
+      <div class="modal-window">
+        <div class="modal-header">
+          <div class="headline-sm text-main">
+            <i class="fa-solid fa-scroll text-accent"></i> BRANDFORGE PROJECT PROPOSAL & SPECIFICATION
+          </div>
+          <button class="btn-command btn-secondary" id="btnCloseProposal" style="padding:4px 10px;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h1>BrandForge - AI-Augmented Brand Asset Studio</h1>
+          <p><strong>Executive Summary:</strong> BrandForge bridges generative AI creativity with deterministic design brand compliance. It allows solo founders and creative teams to generate marketing assets, social banners, and brand flyers while enforcing strict brand color palettes, font pairings, and geometric precision.</p>
+
+          <h2>Core Architecture & System Capabilities</h2>
+          <ul>
+            <li><strong>01 Creative Workspace:</strong> Real-time visual canvas with prompt engineering presets, custom noise synthesis, and live geometric overlays.</li>
+            <li><strong>02 Brand Control Engine:</strong> Centralized design system token editor. Modifying primary/secondary tokens updates canvas graphics and UI chrome synchronously.</li>
+            <li><strong>03 Multi-Format Export Hub:</strong> Automatic resolution and ratio mapping for 1:1 Posts, 4:1 Banners, 9:16 Stories, and high-DPI print formats.</li>
+          </ul>
+
+          <h2>Design Philosophy: Forge Precision</h2>
+          <p>The visual identity uses dark-mode default (#111317), high-contrast Electric Indigo (#5D5DFF), Violet (#8B5CF6), and Electric Blue (#0EA5E9) with Geist, Inter, and JetBrains Mono typography for an authoritative tool aesthetic.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Area -->
+    <div id="toast-container"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
