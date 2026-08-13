@@ -4,9 +4,10 @@
 
 @layer base {
     body {
-        background-color: #111317;
+        background-color: #0D0F12;
         color: #F3F4F6;
         font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
     }
 
     h1,
@@ -19,6 +20,87 @@
     }
 }
 
+/* Ambient Floating Glow Mesh Animation */
+@keyframes ambientGlow {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translate(30px, -20px) scale(1.1);
+        opacity: 0.65;
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1);
+        opacity: 0.4;
+    }
+}
+
+.ambient-mesh {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.ambient-mesh::before {
+    content: '';
+    position: absolute;
+    top: -15%;
+    left: -10%;
+    width: 55vw;
+    height: 55vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(93, 93, 255, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
+    animation: ambientGlow 14s infinite ease-in-out;
+}
+
+.ambient-mesh::after {
+    content: '';
+    position: absolute;
+    bottom: -15%;
+    right: -10%;
+    width: 50vw;
+    height: 50vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+    animation: ambientGlow 18s infinite ease-in-out reverse;
+}
+
+/* Custom Glassmorphism Classes */
+.glass-panel {
+    background: rgba(22, 25, 32, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+    background: rgba(28, 32, 41, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-card:hover {
+    background: rgba(34, 39, 50, 0.85);
+    border-color: rgba(93, 93, 255, 0.4);
+}
+
+/* Glowing Neon Utilities */
+.shadow-glow-primary {
+    box-shadow: 0 0 25px -5px rgba(93, 93, 255, 0.45);
+}
+
+.shadow-glow-secondary {
+    box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.45);
+}
+
+.shadow-glow-accent {
+    box-shadow: 0 0 25px -5px rgba(14, 165, 233, 0.45);
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
@@ -26,27 +108,14 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #181A20;
+    background: #14171D;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #2E3440;
+    background: #2D3340;
     border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: #5D5DFF;
-}
-
-/* Glassmorphism card utilities */
-.glass-panel {
-    background: rgba(26, 29, 35, 0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(46, 52, 64, 0.6);
-}
-
-.glass-card {
-    background: rgba(31, 35, 43, 0.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
 }
