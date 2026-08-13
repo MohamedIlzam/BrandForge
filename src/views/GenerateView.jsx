@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import CanvasRenderer from '../components/CanvasRenderer';
-import {
-    Sparkles, Grid, RotateCcw, LayoutTemplate, Box, Type, Upload, MessageSquare,
-    Sliders, Wand2, Layers, Cpu, Compass, Activity, ShieldAlert
-} from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 
 export default function GenerateView({
     headline, setHeadline,
@@ -11,324 +8,208 @@ export default function GenerateView({
     prompt, setPrompt,
     tokens,
     aspectRatio, setAspectRatio,
-    showGrid, setShowGrid,
     complexity, setComplexity,
     glow, setGlow,
     geometric, setGeometric,
-    onForgeVisual
+    onForgeVisual,
 }) {
-    const [activeDrawer, setActiveDrawer] = useState('templates');
-    const [visualMode, setVisualMode] = useState('lattice'); // 'lattice', 'grid', 'neural', 'aurora', 'blueprint'
+    const [visualMode, setVisualMode] = useState('grid');
     const [isForging, setIsForging] = useState(false);
 
-    const visualModes = [
-        { id: 'lattice', label: 'Laser Lattice', icon: Layers },
-        { id: 'grid', label: 'Cyber Grid 3D', icon: Grid },
-        { id: 'neural', label: 'Neural Matrix', icon: Cpu },
-        { id: 'aurora', label: 'Synthetic Aurora', icon: Activity },
-        { id: 'blueprint', label: 'Tech Blueprint', icon: Compass }
+    const presets = [
+        { title: 'Corporate Identity', desc: 'Structured brand system launch', prompt: 'Clean corporate identity system with geometric accents', ratio: '16:9', mode: 'grid' },
+        { title: 'Product Card', desc: 'Square product feature asset', prompt: 'Minimal product showcase with off-center composition', ratio: '1:1', mode: 'circle' },
+        { title: 'Vertical Story', desc: 'Social story / reel format', prompt: 'Bold vertical story layout with typographic hierarchy', ratio: '9:16', mode: 'diagonal' },
+        { title: 'Header Banner', desc: 'Wide navigation banner', prompt: 'Professional wide-format header with brand elements', ratio: '4:1', mode: 'blocks' },
     ];
 
-    const drawerItems = {
-        templates: [
-            { title: 'Cyberpunk Launch', mode: 'grid', desc: 'Neon blue & indigo tech showcase poster', prompt: 'Cyberpunk tech launch poster with glowing neon grid', ratio: '16:9' },
-            { title: 'Neural AI Architecture', mode: 'neural', desc: 'Connected node matrix graph', prompt: 'Sleek neural network graph with glowing node pulses', ratio: '1:1' },
-            { title: 'Synthetic Wave Keynote', mode: 'aurora', desc: 'Fluid sine wave energy curve', prompt: 'Vibrant synthetic wave keynote graphic with cyan dust', ratio: '9:16' },
-            { title: 'Tech Blueprint Spec', mode: 'blueprint', desc: 'Architectural spec watermark graphic', prompt: 'Authoritative dark blueprint spec sheet with dimension ticks', ratio: '4:1' }
-        ],
-        elements: [
-            { title: 'Perspective Grid Floor', mode: 'grid', desc: '3D perspective floor grid lines' },
-            { title: 'Neural Node Network', mode: 'neural', desc: 'Connected data node pathways' },
-            { title: 'Laser Rectangles', mode: 'lattice', desc: 'Concentric rotated laser square frame' },
-            { title: 'Precision Crosshairs', mode: 'blueprint', desc: 'Technical spec target crosshair' }
-        ],
-        text: [
-            { title: 'Geist 800 Uppercase', desc: 'Heavy modern geometric heading' },
-            { title: 'JetBrains Mono Label', desc: 'Developer spec watermark label' },
-            { title: 'Inter 400 Subtitle', desc: 'Clean high-readability body text' }
-        ],
-        uploads: [
-            { title: 'Brand Logo Vector', desc: 'Vector SVG logo placeholder' },
-            { title: 'UI Dashboard Mock', desc: 'Dark mode app interface asset' }
-        ],
-        prompts: [
-            { title: 'Hyper-Precision Laser', mode: 'lattice', prompt: 'High precision laser engraved circuit pattern with glowing electric indigo lines' },
-            { title: 'Synthetic Aurora Wave', mode: 'aurora', prompt: 'Vibrant synthetic aurora wave with dark obsidian canvas and glowing cyan particles' },
-            { title: 'Cyberpunk Horizon Grid', mode: 'grid', prompt: '3D perspective floor grid with glowing horizon rays' }
-        ]
-    };
+    const modes = [
+        { id: 'grid', label: 'Grid' },
+        { id: 'circle', label: 'Circle' },
+        { id: 'diagonal', label: 'Diagonal' },
+        { id: 'blocks', label: 'Blocks' },
+    ];
 
-    const canvasDimensions = {
-        '1:1': { w: 500, h: 500 },
-        '16:9': { w: 620, h: 348 },
-        '9:16': { w: 320, h: 568 },
-        '4:1': { w: 660, h: 165 }
+    const dims = {
+        '1:1': { w: 480, h: 480 },
+        '16:9': { w: 600, h: 337 },
+        '9:16': { w: 300, h: 533 },
+        '4:1': { w: 640, h: 160 },
     };
-
-    const currentDim = canvasDimensions[aspectRatio] || canvasDimensions['1:1'];
+    const d = dims[aspectRatio] || dims['1:1'];
 
     const handleForge = () => {
         setIsForging(true);
-        setTimeout(() => {
-            setIsForging(false);
-            onForgeVisual && onForgeVisual();
-        }, 700);
+        setTimeout(() => { setIsForging(false); onForgeVisual?.(); }, 500);
     };
 
     return (
-        <div className="flex flex-1 h-full overflow-hidden bg-forge-bg relative">
-            {/* Ambient Mesh Background */}
-            <div className="ambient-mesh"></div>
-
-            {/* 1. Left Tool Ribbon & Drawer */}
-            <div className="w-72 glass-panel border-r border-forge-border flex h-full shrink-0 z-10">
-                {/* Vertical Ribbon */}
-                <div className="w-14 bg-black/40 border-r border-forge-border flex flex-col items-center py-4 space-y-4 shrink-0">
-                    {[
-                        { id: 'templates', icon: LayoutTemplate, label: 'Templates' },
-                        { id: 'elements', icon: Box, label: 'Elements' },
-                        { id: 'text', icon: Type, label: 'Typography' },
-                        { id: 'uploads', icon: Upload, label: 'Assets' },
-                        { id: 'prompts', icon: MessageSquare, label: 'Prompts' }
-                    ].map(tab => {
-                        const Icon = tab.icon;
-                        const isActive = activeDrawer === tab.id;
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveDrawer(tab.id)}
-                                className={`p-2.5 rounded-xl transition-all ${isActive
-                                        ? 'bg-forge-primary text-white shadow-glow-primary'
-                                        : 'text-gray-400 hover:text-white hover:bg-forge-card'
-                                    }`}
-                                title={tab.label}
-                            >
-                                <Icon className="w-5 h-5" />
-                            </button>
-                        );
-                    })}
+        <div className="flex flex-1 h-full overflow-hidden">
+            {/* Left — Presets */}
+            <div className="w-64 bg-white border-r border-rule flex flex-col h-full shrink-0 overflow-y-auto">
+                <div className="px-4 py-4 border-b border-rule">
+                    <h2 className="font-display font-700 text-sm text-ink">Presets</h2>
                 </div>
-
-                {/* Drawer List */}
-                <div className="flex-1 p-4 overflow-y-auto">
-                    <div className="text-xs font-mono font-bold text-forge-muted uppercase tracking-wider mb-3">
-                        {activeDrawer.toUpperCase()} PRESETS
-                    </div>
-                    <div className="space-y-2.5">
-                        {drawerItems[activeDrawer]?.map((item, idx) => (
-                            <div
-                                key={idx}
-                                onClick={() => {
-                                    if (item.prompt) setPrompt(item.prompt);
-                                    if (item.ratio) setAspectRatio(item.ratio);
-                                    if (item.mode) setVisualMode(item.mode);
-                                }}
-                                className="glass-card p-3 rounded-xl cursor-pointer transition group"
-                            >
-                                <div className="font-geist font-bold text-xs text-white group-hover:text-forge-accent transition-colors flex items-center justify-between">
-                                    <span>{item.title}</span>
-                                    {item.mode && (
-                                        <span className="text-[10px] font-mono text-forge-primary bg-forge-primary/10 px-1.5 py-0.5 rounded border border-forge-primary/20">
-                                            {item.mode}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="text-[11px] text-gray-400 mt-1 leading-snug">
-                                    {item.desc}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                <div className="p-4 space-y-1">
+                    {presets.map((p, i) => (
+                        <button
+                            key={i}
+                            onClick={() => { setPrompt(p.prompt); setAspectRatio(p.ratio); setVisualMode(p.mode); }}
+                            className="w-full text-left px-3 py-2.5 border-l-2 border-transparent hover:border-cobalt hover:bg-cobalt-light transition-colors duration-150"
+                        >
+                            <span className="font-display font-600 text-xs text-ink block">{p.title}</span>
+                            <span className="text-muted text-[11px] leading-tight block mt-0.5">{p.desc}</span>
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* 2. Main Creative Canvas Stage */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden z-10">
-                {/* Stage Toolbar Header */}
-                <div className="h-14 border-b border-forge-border px-6 flex items-center justify-between glass-panel">
-                    {/* Visual Style Mode Selector */}
-                    <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-mono text-forge-muted mr-1">Style Mode:</span>
-                        {visualModes.map(m => {
-                            const Icon = m.icon;
-                            const isActive = visualMode === m.id;
-                            return (
+            {/* Center — Canvas stage */}
+            <div className="flex-1 flex flex-col h-full overflow-hidden bg-ground grain">
+                {/* Toolbar */}
+                <div className="h-12 border-b border-rule px-5 flex items-center justify-between bg-white">
+                    <div className="flex items-center gap-4">
+                        <span className="text-xs text-muted">Composition</span>
+                        <div className="flex items-center gap-1">
+                            {modes.map(m => (
                                 <button
                                     key={m.id}
                                     onClick={() => setVisualMode(m.id)}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition ${isActive
-                                            ? 'bg-forge-primary text-white shadow-glow-primary'
-                                            : 'bg-forge-card/60 text-gray-400 hover:text-white border border-white/5'
+                                    className={`px-2.5 py-1 text-xs font-display font-500 transition-colors duration-150 ${visualMode === m.id
+                                            ? 'bg-cobalt text-white'
+                                            : 'text-muted hover:text-ink hover:bg-hover'
                                         }`}
                                 >
-                                    <Icon className="w-3.5 h-3.5" />
-                                    <span>{m.label}</span>
+                                    {m.label}
                                 </button>
-                            );
-                        })}
+                            ))}
+                        </div>
+
+                        <div className="w-px h-5 bg-rule" />
+
+                        <span className="text-xs text-muted">Ratio</span>
+                        <div className="flex items-center gap-1">
+                            {['1:1', '16:9', '9:16', '4:1'].map(r => (
+                                <button
+                                    key={r}
+                                    onClick={() => setAspectRatio(r)}
+                                    className={`px-2 py-1 font-mono text-xs transition-colors duration-150 ${aspectRatio === r
+                                            ? 'bg-ink text-white'
+                                            : 'text-muted hover:text-ink hover:bg-hover'
+                                        }`}
+                                >
+                                    {r}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-forge-muted">Aspect:</span>
-                        {['1:1', '16:9', '9:16', '4:1'].map(r => (
-                            <button
-                                key={r}
-                                onClick={() => setAspectRatio(r)}
-                                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition ${aspectRatio === r
-                                        ? 'bg-forge-accent text-white shadow-glow-accent'
-                                        : 'bg-forge-card text-gray-400 hover:text-white border border-forge-border'
-                                    }`}
-                            >
-                                {r}
-                            </button>
-                        ))}
-
-                        <button
-                            onClick={() => {
-                                setComplexity(70);
-                                setGlow(85);
-                                setGeometric(90);
-                                setHeadline('UNLEASH YOUR BRAND');
-                                setSubhead('Design at the speed of thought with deterministic precision.');
-                                setVisualMode('lattice');
-                            }}
-                            className="p-1.5 rounded-lg bg-forge-card text-gray-400 hover:text-white border border-forge-border transition ml-2"
-                            title="Reset Parameters"
-                        >
-                            <RotateCcw className="w-4 h-4" />
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => {
+                            setComplexity(70); setGlow(85); setGeometric(90);
+                            setHeadline('BRANDFORGE'); setSubhead('Asset Studio');
+                            setVisualMode('grid');
+                        }}
+                        className="p-1.5 text-muted hover:text-ink transition-colors"
+                        title="Reset"
+                    >
+                        <RotateCcw className="w-4 h-4" strokeWidth={1.5} />
+                    </button>
                 </div>
 
-                {/* Canvas Display */}
-                <div className="flex-1 p-6 flex items-center justify-center relative overflow-auto bg-black/50">
-                    <div className="relative flex items-center justify-center p-5 rounded-2xl glass-panel border border-white/10 shadow-2xl">
+                {/* Canvas */}
+                <div className="flex-1 flex items-center justify-center p-8 overflow-auto relative">
+                    <div className="bg-white p-1 border border-rule">
                         <CanvasRenderer
-                            width={currentDim.w}
-                            height={currentDim.h}
+                            width={d.w}
+                            height={d.h}
                             headline={headline}
                             subhead={subhead}
                             tokens={tokens}
                             mode={visualMode}
-                            complexity={complexity}
-                            glow={glow}
-                            geometric={geometric}
                         />
-
-                        {/* Loading Overlay */}
-                        {isForging && (
-                            <div className="absolute inset-0 rounded-2xl bg-black/85 backdrop-blur-md flex flex-col items-center justify-center gap-3 z-30">
-                                <Wand2 className="w-8 h-8 text-forge-primary animate-spin" />
-                                <div className="font-geist font-bold text-sm text-white tracking-wide">
-                                    SYNTHESIZING GENERATIVE ART...
-                                </div>
-                                <div className="font-mono text-xs text-forge-accent">
-                                    Enforcing Brand Token Compliance
-                                </div>
-                            </div>
-                        )}
                     </div>
+
+                    {isForging && (
+                        <div className="absolute inset-0 bg-ground/90 flex items-center justify-center">
+                            <p className="font-display font-600 text-sm text-ink">Generating…</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* 3. Right Generative Inspector */}
-            <div className="w-80 glass-panel border-l border-forge-border flex flex-col h-full shrink-0 z-10">
-                <div className="p-4 border-b border-forge-border flex items-center gap-2">
-                    <Sliders className="w-4 h-4 text-forge-primary" />
-                    <h2 className="font-geist font-bold text-sm text-white uppercase tracking-wider">Generative Inspector</h2>
+            {/* Right — Inspector */}
+            <div className="w-72 bg-white border-l border-rule flex flex-col h-full shrink-0">
+                <div className="px-4 py-4 border-b border-rule">
+                    <h2 className="font-display font-700 text-sm text-ink">Inspector</h2>
                 </div>
 
-                <div className="p-5 flex-1 space-y-5 overflow-y-auto">
-                    {/* Prompt Directive */}
-                    <div className="space-y-2">
-                        <label className="text-xs font-mono font-semibold text-forge-muted uppercase tracking-wider block">
-                            Prompt Directive
-                        </label>
+                <div className="p-4 flex-1 space-y-5 overflow-y-auto">
+                    {/* Prompt */}
+                    <div>
+                        <label className="text-xs text-muted block mb-1.5">Prompt</label>
                         <textarea
                             rows={3}
                             value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
-                            className="w-full bg-forge-card border border-forge-border rounded-xl p-2.5 text-xs font-geist text-white focus:outline-none focus:border-forge-primary resize-none"
+                            onChange={e => setPrompt(e.target.value)}
+                            className="w-full border border-rule px-2.5 py-2 text-xs font-body text-ink focus:outline-none focus:border-cobalt resize-none bg-ground"
                         />
                     </div>
 
-                    {/* Headline & Subhead Directives */}
-                    <div className="space-y-3">
-                        <label className="text-xs font-mono font-semibold text-forge-muted uppercase tracking-wider block">
-                            Direct Overlays
-                        </label>
+                    {/* Typography */}
+                    <div className="pt-3 border-t border-rule space-y-3">
+                        <label className="text-xs text-muted block">Typography overlays</label>
                         <div>
-                            <span className="text-[11px] text-gray-400 block mb-1">Headline Text</span>
+                            <span className="text-[11px] text-muted block mb-1">Headline</span>
                             <input
                                 type="text"
                                 value={headline}
-                                onChange={(e) => setHeadline(e.target.value)}
-                                className="w-full bg-forge-card border border-forge-border rounded-xl px-3 py-2 text-xs font-geist text-white focus:outline-none focus:border-forge-primary"
+                                onChange={e => setHeadline(e.target.value)}
+                                className="w-full border border-rule px-2.5 py-1.5 text-xs font-display text-ink focus:outline-none focus:border-cobalt bg-ground"
                             />
                         </div>
                         <div>
-                            <span className="text-[11px] text-gray-400 block mb-1">Subtitle Text</span>
+                            <span className="text-[11px] text-muted block mb-1">Subtitle</span>
                             <input
                                 type="text"
                                 value={subhead}
-                                onChange={(e) => setSubhead(e.target.value)}
-                                className="w-full bg-forge-card border border-forge-border rounded-xl px-3 py-2 text-xs font-geist text-white focus:outline-none focus:border-forge-primary"
+                                onChange={e => setSubhead(e.target.value)}
+                                className="w-full border border-rule px-2.5 py-1.5 text-xs font-body text-ink focus:outline-none focus:border-cobalt bg-ground"
                             />
                         </div>
                     </div>
 
-                    {/* Sliders */}
-                    <div className="space-y-4 pt-2 border-t border-forge-border/60">
-                        <label className="text-xs font-mono font-semibold text-forge-muted uppercase tracking-wider block">
-                            Generative Parameters
-                        </label>
-                        <div>
-                            <div className="flex justify-between text-xs mb-1">
-                                <span className="text-gray-300 font-medium">Complexity</span>
-                                <span className="font-mono text-forge-primary font-bold">{complexity}%</span>
+                    {/* Parameters */}
+                    <div className="pt-3 border-t border-rule space-y-3">
+                        <label className="text-xs text-muted block">Parameters</label>
+                        {[
+                            { label: 'Density', value: complexity, set: setComplexity },
+                            { label: 'Weight', value: glow, set: setGlow },
+                            { label: 'Structure', value: geometric, set: setGeometric },
+                        ].map(s => (
+                            <div key={s.label}>
+                                <div className="flex justify-between text-xs mb-1">
+                                    <span className="text-ink">{s.label}</span>
+                                    <span className="font-mono text-muted">{s.value}</span>
+                                </div>
+                                <input
+                                    type="range" min="10" max="100" value={s.value}
+                                    onChange={e => s.set(parseInt(e.target.value))}
+                                    className="w-full accent-cobalt"
+                                />
                             </div>
-                            <input
-                                type="range" min="10" max="100" value={complexity}
-                                onChange={(e) => setComplexity(parseInt(e.target.value))}
-                                className="w-full accent-forge-primary"
-                            />
-                        </div>
-
-                        <div>
-                            <div className="flex justify-between text-xs mb-1">
-                                <span className="text-gray-300 font-medium">Electric Glow</span>
-                                <span className="font-mono text-forge-secondary font-bold">{glow}%</span>
-                            </div>
-                            <input
-                                type="range" min="10" max="100" value={glow}
-                                onChange={(e) => setGlow(parseInt(e.target.value))}
-                                className="w-full accent-forge-secondary"
-                            />
-                        </div>
-
-                        <div>
-                            <div className="flex justify-between text-xs mb-1">
-                                <span className="text-gray-300 font-medium">Geometric Density</span>
-                                <span className="font-mono text-forge-accent font-bold">{geometric}%</span>
-                            </div>
-                            <input
-                                type="range" min="10" max="100" value={geometric}
-                                onChange={(e) => setGeometric(parseInt(e.target.value))}
-                                className="w-full accent-forge-accent"
-                            />
-                        </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Forge Action Footer */}
-                <div className="p-4 border-t border-forge-border glass-panel">
+                {/* Generate CTA */}
+                <div className="p-4 border-t border-rule">
                     <button
                         onClick={handleForge}
                         disabled={isForging}
-                        className="w-full py-3 rounded-xl bg-gradient-to-r from-forge-primary via-indigo-600 to-forge-secondary hover:opacity-95 text-white font-geist font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-glow-primary transition active:scale-95 disabled:opacity-50"
+                        className="w-full py-2.5 bg-cobalt text-white font-display font-600 text-xs tracking-wide hover:bg-blue-700 transition-colors duration-150 disabled:opacity-40"
                     >
-                        <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
-                        <span>Forge Visual</span>
+                        Generate
                     </button>
                 </div>
             </div>
